@@ -1,0 +1,33 @@
+name: Python CI Pipeline
+
+# Запуск після push або pull request у main
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Завантаження коду репозиторію
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Налаштування Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Встановлення залежностей
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # Запуск модульних тестів
+      - name: Run Unit Tests
+        run: python -m unittest test_app.py
